@@ -12,6 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.example.demo.auth.MyExpiredSessionStrategy;
 import com.example.demo.auth.MyFailureAuthHandler;
 import com.example.demo.auth.MySuccessAuthHandler;
 
@@ -22,7 +23,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	private MySuccessAuthHandler mySuccessAuthHandler;
 	@Resource
 	private MyFailureAuthHandler myFauilerAuthHandler;
-	
+	@Resource
+	private MyExpiredSessionStrategy myExpiredSessionStrategy;
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -47,7 +49,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 				.sessionManagement()
 					.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
 					.invalidSessionUrl("/login")
-					.sessionFixation().migrateSession();
+					.sessionFixation().migrateSession()
+					.maximumSessions(1)
+					.expiredSessionStrategy(myExpiredSessionStrategy);
 	}
 
 	@Override
