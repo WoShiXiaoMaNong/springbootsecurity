@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,8 +39,9 @@ public class BizController {
 	public String biz2() {
 		return "biz2";
 	}
-	@GetMapping("/json")
-	public @ResponseBody ResponseEntity<Testj> json() {
+	@GetMapping("/hello")
+	public @ResponseBody ResponseEntity<Testj> json(HttpServletResponse res) {
+		res.setHeader("Access-Control-Allow-Origin","*");
 		return ResponseEntity.ok(new Testj("test name",12));
 	}
 	

@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.example.demo.auth.MyExpiredSessionStrategy;
 import com.example.demo.auth.MyFailureAuthHandler;
 import com.example.demo.auth.MySuccessAuthHandler;
+import com.example.demo.auth.MyUserDetailsService;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
@@ -25,6 +26,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	private MyFailureAuthHandler myFauilerAuthHandler;
 	@Resource
 	private MyExpiredSessionStrategy myExpiredSessionStrategy;
+	
+	@Resource
+	MyUserDetailsService myUserDetailsService;
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -40,10 +44,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.and()
 			.authorizeRequests()
 				.antMatchers("/login.html","login").permitAll()
-				.antMatchers("/biz1","/biz2","/json")
+				.antMatchers("/biz1","/biz2","/hello")
 					.hasAnyAuthority("ROLE_user","ROLE_admin")
-				.antMatchers("/syslog","/sysuser")
-					.hasAnyAuthority("ROLE_admin")
+				.antMatchers("/syslog")
+					.hasAnyAuthority("/syslog")
+				.antMatchers("/sysuser")
+					.hasAnyAuthority("/sys:user")
 				.anyRequest().authenticated()
 			.and()
 				.sessionManagement()
@@ -56,15 +62,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.inMemoryAuthentication()
-				.withUser("user")
-				.password(passwordEncoder().encode("123"))
-				.roles("user")
-					.and()
-				.withUser("admin")
-				.password(passwordEncoder().encode("123"))
-				.roles("admin")
-				.and()
+//		auth.inMemoryAuthentication()
+//				.withUser("user")
+//				.password(passwordEncoder().encode("123"))
+//				.roles("user")
+//					.and()
+//				.withUser("admin")
+//				.password(passwordEncoder().encode("123"))
+//				.roles("admin")
+//				.and()
+//				.passwordEncoder(passwordEncoder());
+		auth.userDetailsService(this.myUserDetailsService)
 				.passwordEncoder(passwordEncoder());
 	}
 	
@@ -80,5 +88,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		return new BCryptPasswordEncoder();
 	}
 	
+
 
 }
