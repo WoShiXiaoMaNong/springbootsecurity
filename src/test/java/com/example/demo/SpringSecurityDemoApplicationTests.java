@@ -1,6 +1,5 @@
 package com.example.demo;
 
-import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 
@@ -16,6 +15,7 @@ import org.springframework.util.AntPathMatcher;
 
 import com.example.demo.auth.MyUserDetailsService;
 import com.example.demo.auth.MyUserDetailsServiceMapper;
+import com.example.demo.auth.jwt.JwtTokenUtil;
 
 @SpringBootTest
 class SpringSecurityDemoApplicationTests {
@@ -27,6 +27,9 @@ class SpringSecurityDemoApplicationTests {
 	MyUserDetailsServiceMapper mmDetailsServiceMapper;
 	@Resource
 	MyUserDetailsService s;
+	
+	@Resource
+	JwtTokenUtil jtu;
 	
 	@Test
 	void contextLoads() {
@@ -53,5 +56,10 @@ class SpringSecurityDemoApplicationTests {
 		boolean result = authsAuthorities.stream().anyMatch(url -> antPathMatcher.match("/hello", url.getAuthority()));
 		
 		System.out.println(result);
+	}
+	
+	@Test
+	void testJtu() {
+		System.out.println(this.jtu);
 	}
 }
