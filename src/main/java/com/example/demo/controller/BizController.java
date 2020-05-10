@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.ResponseEntity;
@@ -8,9 +9,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.demo.service.MyService;
+
 @Controller
 public class BizController {
 	
+	@Resource
+	MyService mservice;
 	
 	//Please find in WebConfig.java
 //	@PostMapping("/login")
@@ -42,7 +47,7 @@ public class BizController {
 	@GetMapping("/hello")
 	public @ResponseBody ResponseEntity<Testj> json(HttpServletResponse res) {
 		res.setHeader("Access-Control-Allow-Origin","*");
-		return ResponseEntity.ok(new Testj("test name",12));
+		return ResponseEntity.ok(new Testj("test name" + this.mservice.findStringPostFilter(),12));
 	}
 	
 }
