@@ -50,7 +50,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter{
 					SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 				}
 			}
-			filterChain.doFilter(request, response);
+			
 		}else {
 			 String originRequestUrl = request.getScheme()
 		                + "://" + request.getServerName()
@@ -58,9 +58,9 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter{
 		                + request.getContextPath()
 		                + request.getRequestURI();
 	
-			response.sendRedirect("http://www.baidu.com?target=" + originRequestUrl);
+			//response.sendRedirect("http://www.baidu.com?target=" + originRequestUrl);
 		}
-		
+		filterChain.doFilter(request, response);
 		
 	}
 
